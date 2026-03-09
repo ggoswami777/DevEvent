@@ -131,6 +131,7 @@ EventSchema.pre('save', function () {
 
 // Helper function to generate URL-friendly slug
 function generateSlug(title: string): string {
+  if (!title) return '';
   return title
     .toLowerCase()
     .trim()
@@ -142,6 +143,7 @@ function generateSlug(title: string): string {
 
 // Helper function to normalize date to ISO format
 function normalizeDate(dateString: string): string {
+  if (!dateString) return '';
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
     throw new Error('Invalid date format');
@@ -151,6 +153,7 @@ function normalizeDate(dateString: string): string {
 
 // Helper function to normalize time format
 function normalizeTime(timeString: string): string {
+  if (!timeString) return '';
   // Handle various time formats and convert to HH:MM (24-hour format)
   const timeRegex = /^(\d{1,2}):(\d{2})(\s*(AM|PM))?$/i;
   const match = timeString.trim().match(timeRegex);

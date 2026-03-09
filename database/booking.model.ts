@@ -40,6 +40,21 @@ const BookingSchema = new Schema<IBooking>(
 BookingSchema.pre('save', async function () {
   const booking = this as IBooking;
 
+  // Check for duplicate booking
+  if (booking.isNew) {
+    const BookingModel = models.Booking || model<IBooking>('Booking', BookingSchema);
+    const existingBooking = await BookingModel.findOne({
+      eventId: booking.eventId,
+      email: booking.email,
+    });
+    
+    if (existingBooking) {
+      const error = new Error('This email has already been used to book this event');
+      error.name = 'ValidationError';
+      throw error;
+    }
+  }
+
   // Only validate eventId if it's new or modified
   if (booking.isModified('eventId') || booking.isNew) {
     let eventExists;
